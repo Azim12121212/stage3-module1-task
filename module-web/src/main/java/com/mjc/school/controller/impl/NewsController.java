@@ -20,13 +20,13 @@ public class NewsController implements GeneralController<NewsDTO> {
     }
 
     @Override
-    public List<NewsDTO> getAll() {
-        return newsService.getAll();
+    public List<NewsDTO> readAll() {
+        return newsService.readAll();
     }
 
     @Override
-    public NewsDTO getById(Long id) throws NewsException {
-        return newsService.getById(id);
+    public NewsDTO readById(Long id) throws NewsException {
+        return newsService.readById(id);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class NewsController implements GeneralController<NewsDTO> {
     }
 
     @Override
-    public boolean delete(Long id) throws NewsException {
+    public Boolean delete(Long id) throws NewsException {
         return newsService.delete(id);
     }
 }

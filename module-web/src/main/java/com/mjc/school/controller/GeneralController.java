@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface GeneralController<T> {
     T create(T t) throws NewsException;
-    List<T> getAll();
-    T getById(Long id) throws NewsException;
+    List<T> readAll();
+    T readById(Long id) throws NewsException;
     T update(T t) throws NewsException;
-    boolean delete(Long id) throws NewsException;
+    Boolean delete(Long id) throws NewsException;
 }

@@ -1,7 +1,7 @@
 package com.mjc.school.repository.datasource;
 
-import com.mjc.school.repository.model.Author;
-import com.mjc.school.repository.model.News;
+import com.mjc.school.repository.model.AuthorModel;
+import com.mjc.school.repository.model.NewsModel;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -12,8 +12,8 @@ import java.util.Scanner;
 
 public class DataSource {
     private static DataSource instance;
-    private List<Author> authorList;
-    private List<News> newsList;
+    private List<AuthorModel> authorModelList;
+    private List<NewsModel> newsModelList;
     private Long authorId;
     private Long newsId;
 
@@ -40,26 +40,26 @@ public class DataSource {
         return instance;
     }
 
-    public List<Author> getAuthorList() {
-        return authorList;
+    public List<AuthorModel> getAuthorList() {
+        return authorModelList;
     }
 
-    public List<News> getNewsList() {
-        return newsList;
+    public List<NewsModel> getNewsList() {
+        return newsModelList;
     }
 
     private void readAuthorListFromDataSource() {
-        authorList = new ArrayList<>();
+        authorModelList = new ArrayList<>();
         List<String> authorNames = readFromDataSource(AUTHOR_PATH);
         for (String s: authorNames) {
-            Author author = new Author(authorId, s);
-            authorList.add(author);
+            AuthorModel authorModel = new AuthorModel(authorId, s);
+            authorModelList.add(authorModel);
             authorId++;
         }
     }
 
     private void readNewsListFromDataSource() {
-        newsList = new ArrayList<>();
+        newsModelList = new ArrayList<>();
         List<String> contentString = readFromDataSource(CONTENT_PATH);
         List<String> newsString = readFromDataSource(NEWS_PATH);
 
@@ -91,11 +91,11 @@ public class DataSource {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
         for (int i=0; i<MAX_AMOUNT_OF_NEWS; i++) {
-            News news = new News(newsId, newsTitles.get(i), contentString.get(i),
+            NewsModel newsModel = new NewsModel(newsId, newsTitles.get(i), contentString.get(i),
                     LocalDateTime.parse(newsCreateDates.get(i), formatter),
                     LocalDateTime.parse(newsLastUpdatedDates.get(i), formatter),
                     Long.parseLong(newsAuthorIds.get(i)));
-            newsList.add(news);
+            newsModelList.add(newsModel);
             newsId++;
         }
     }

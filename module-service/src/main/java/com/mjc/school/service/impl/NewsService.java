@@ -1,8 +1,8 @@
 package com.mjc.school.service.impl;
 
 import com.mjc.school.repository.impl.NewsRepository;
-import com.mjc.school.repository.model.News;
-import com.mjc.school.repository.model.Author;
+import com.mjc.school.repository.model.NewsModel;
+import com.mjc.school.repository.model.AuthorModel;
 import com.mjc.school.service.GeneralService;
 import com.mjc.school.service.dto.NewsDTO;
 import com.mjc.school.service.errorsexceptions.Errors;
@@ -45,22 +45,22 @@ public class NewsService implements GeneralService<NewsDTO> {
         if (!doesAuthorIdExist(newsDTO.getAuthorId())) {
             throw new NewsException(Errors.ERROR_NEWS_AUTHOR_ID_NOT_EXIST.getErrorData(newsDTO.getAuthorId(),false));
         }
-        News news = newsRepository.create(NewsMapper.INSTANCE.newsDTOToNews(newsDTO));
-        return NewsMapper.INSTANCE.newsToNewsDTO(news);
+        NewsModel newsModel = newsRepository.create(NewsMapper.INSTANCE.newsDTOToNews(newsDTO));
+        return NewsMapper.INSTANCE.newsToNewsDTO(newsModel);
     }
 
     @Override
-    public List<NewsDTO> getAll() {
+    public List<NewsDTO> readAll() {
         newsDTOList.clear();
-        for (News news: newsRepository.getAll()) {
-            newsDTOList.add(NewsMapper.INSTANCE.newsToNewsDTO(news));
+        for (NewsModel newsModel : newsRepository.readAll()) {
+            newsDTOList.add(NewsMapper.INSTANCE.newsToNewsDTO(newsModel));
         }
         return newsDTOList;
     }
 
     @Override
-    public NewsDTO getById(Long id) throws NewsException {
-        NewsDTO newsDTO = NewsMapper.INSTANCE.newsToNewsDTO(newsRepository.getById(id));
+    public NewsDTO readById(Long id) throws NewsException {
+        NewsDTO newsDTO = NewsMapper.INSTANCE.newsToNewsDTO(newsRepository.readById(id));
         if (newsDTO!=null) {
             return newsDTO;
         } else {
@@ -70,7 +70,7 @@ public class NewsService implements GeneralService<NewsDTO> {
 
     @Override
     public NewsDTO update(NewsDTO newsDTO) throws NewsException {
-        if (getById(newsDTO.getId())==null) {
+        if (readById(newsDTO.getId())==null) {
             throw new NewsException(Errors.ERROR_NEWS_ID_NOT_EXIST.getErrorData(newsDTO.getId(),true));
         }
         newsValidator.checkNewsTitle(newsDTO.getTitle());
@@ -79,21 +79,21 @@ public class NewsService implements GeneralService<NewsDTO> {
         if (!doesAuthorIdExist(newsDTO.getAuthorId())) {
             throw new NewsException(Errors.ERROR_NEWS_AUTHOR_ID_NOT_EXIST.getErrorData(newsDTO.getAuthorId(),false));
         }
-        News news = newsRepository.update(NewsMapper.INSTANCE.newsDTOToNews(newsDTO));
-        return NewsMapper.INSTANCE.newsToNewsDTO(news);
+        NewsModel newsModel = newsRepository.update(NewsMapper.INSTANCE.newsDTOToNews(newsDTO));
+        return NewsMapper.INSTANCE.newsToNewsDTO(newsModel);
     }
 
     @Override
-    public boolean delete(Long id) throws NewsException {
-        if (getById(id)==null) {
+    public Boolean delete(Long id) throws NewsException {
+        if (readById(id)==null) {
             throw new NewsException(Errors.ERROR_NEWS_ID_NOT_EXIST.getErrorData(id,true));
         }
         return newsRepository.delete(id);
     }
 
     private boolean doesAuthorIdExist(Long authorId) {
-        for (Author author: newsRepository.getAuthorList()) {
-            if (Objects.equals(authorId, author.getId())) {
+        for (AuthorModel authorModel : newsRepository.getAuthorList()) {
+            if (Objects.equals(authorId, authorModel.getId())) {
                 return true;
             }
         }

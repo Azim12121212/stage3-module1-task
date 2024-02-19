@@ -60,7 +60,7 @@ public class AppMenuController {
 
     private void getAllNewsOption() {
         System.out.println(OPERATION + MenuOptions.GET_ALL_NEWS.getOptionName());
-        for (NewsDTO dto: newsController.getAll()) {
+        for (NewsDTO dto: newsController.readAll()) {
             System.out.println(dto);
         }
     }
@@ -71,7 +71,7 @@ public class AppMenuController {
             System.out.println(ENTER_NEWS_ID);
             String id = scanner.nextLine();
             newsValidator.checkNewsId(id);
-            System.out.println(newsController.getById(Long.parseLong(id)));
+            System.out.println(newsController.readById(Long.parseLong(id)));
         } catch (NewsException e) {
             System.out.println(e.getMessage());
         }

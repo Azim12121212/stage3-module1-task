@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
-public class NewsRepository implements GeneralRepository<News> {
+public class NewsRepository implements GeneralRepository<NewsModel> {
     private final DataSource dataSource;
 
     private final DateTimeFormatter MY_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
@@ -19,57 +19,57 @@ public class NewsRepository implements GeneralRepository<News> {
     }
 
     @Override
-    public News create(News news) {
+    public NewsModel create(NewsModel newsModel) {
         Long id = (long) (dataSource.getNewsList().size()+1);
-        news.setId(id);
+        newsModel.setId(id);
         LocalDateTime time = LocalDateTime.parse(LocalDateTime.now().format(MY_FORMAT));
-        news.setCreateDate(time);
-        news.setLastUpdatedDate(time);
-        dataSource.getNewsList().add(news);
-        return news;
+        newsModel.setCreateDate(time);
+        newsModel.setLastUpdatedDate(time);
+        dataSource.getNewsList().add(newsModel);
+        return newsModel;
     }
 
     @Override
-    public List<News> getAll() {
+    public List<NewsModel> readAll() {
         return dataSource.getNewsList();
     }
 
     @Override
-    public News getById(Long id) {
-        for (News news: dataSource.getNewsList()) {
-            if (Objects.equals(id, news.getId())) {
-                return news;
+    public NewsModel readById(Long id) {
+        for (NewsModel newsModel : dataSource.getNewsList()) {
+            if (Objects.equals(id, newsModel.getId())) {
+                return newsModel;
             }
         }
         return null;
     }
 
     @Override
-    public News update(News news) {
+    public NewsModel update(NewsModel newsModel) {
         LocalDateTime time = LocalDateTime.parse(LocalDateTime.now().format(MY_FORMAT));
-        News newsInList = getById(news.getId());
-        if (newsInList!=null) {
-            int index = dataSource.getNewsList().indexOf(newsInList);
-            dataSource.getNewsList().get(index).setTitle(news.getTitle());
-            dataSource.getNewsList().get(index).setContent(news.getContent());
+        NewsModel newsModelInList = readById(newsModel.getId());
+        if (newsModelInList !=null) {
+            int index = dataSource.getNewsList().indexOf(newsModelInList);
+            dataSource.getNewsList().get(index).setTitle(newsModel.getTitle());
+            dataSource.getNewsList().get(index).setContent(newsModel.getContent());
             dataSource.getNewsList().get(index).setLastUpdatedDate(time);
-            dataSource.getNewsList().get(index).setAuthorId(news.getAuthorId());
+            dataSource.getNewsList().get(index).setAuthorId(newsModel.getAuthorId());
             return dataSource.getNewsList().get(index);
         }
         return null;
     }
 
     @Override
-    public boolean delete(Long id) {
-        News news = getById(id);
-        if (news!=null) {
-            dataSource.getNewsList().remove(news);
+    public Boolean delete(Long id) {
+        NewsModel newsModel = readById(id);
+        if (newsModel !=null) {
+            dataSource.getNewsList().remove(newsModel);
             return true;
         }
         return false;
     }
 
-    public List<Author> getAuthorList() {
+    public List<AuthorModel> getAuthorList() {
         return dataSource.getAuthorList();
     }
 }
